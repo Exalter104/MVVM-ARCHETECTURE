@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_archectecture/utils/routess/routes_name.dart';
 import 'package:mvvm_archectecture/views/home_screen.dart';
-import 'package:mvvm_archectecture/views/login.dart';
+import 'package:mvvm_archectecture/views/login_view.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
+    // ignore: unused_local_variable
     final argues = settings.arguments;
     switch (settings.name) {
       case RoutesNames.home:

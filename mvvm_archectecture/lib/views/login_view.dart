@@ -1,7 +1,11 @@
+// ignore_for_file: avoid_print, unused_local_variable, prefer_final_fields
+
 import 'package:flutter/material.dart';
 import 'package:mvvm_archectecture/resources/colors.dart';
 import 'package:mvvm_archectecture/resources/components/round_button.dart';
 import 'package:mvvm_archectecture/utils/routess/utils.dart';
+import 'package:mvvm_archectecture/views_model/auth_view_model.dart';
+import 'package:provider/provider.dart';
 
 // import '../utils/routess/routes_name.dart';
 
@@ -13,8 +17,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController __passwordController = TextEditingController();
   FocusNode emailFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
   ValueNotifier<bool> obsecurePassword = ValueNotifier<bool>(true);
@@ -23,8 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     super.dispose();
 
-    emailController.dispose();
-    passwordController.dispose();
+    _emailController.dispose();
+    __passwordController.dispose();
 
     emailFocusNode.dispose();
     passwordFocusNode.dispose();
@@ -33,11 +37,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authviewModel = Provider.of<AuthViewModel>(context);
     final height = MediaQuery.of(context).size.height * 1;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.red,
-          title: Center(child: Text("HomeScreen")),
+          title: Center(child: Text("Login Screen")),
         ),
         body: SafeArea(
           child: Column(
@@ -52,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 child: TextFormField(
-                    controller: emailController,
+                    controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     focusNode: emailFocusNode,
                     decoration: InputDecoration(
@@ -74,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       (BuildContext context, dynamic value, Widget? child) {
                     return TextFormField(
                       focusNode: passwordFocusNode,
-                      controller: passwordController,
+                      controller: __passwordController,
                       obscureText: obsecurePassword.value,
                       obscuringCharacter: "*",
                       decoration: InputDecoration(
@@ -101,14 +106,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 child: Roundbutton(
                   title: "Login",
+                  loading: authviewModel.loading,
                   onPress: () {
-                    if (emailController.text.isEmpty) {
+                    if (_emailController.text.isEmpty) {
                       Utils.snackBar("Please Enter email", context);
-                    } else if (passwordController.text.isEmpty) {
+                    } else if (__passwordController.text.isEmpty) {
                       Utils.snackBar("Please Enter password", context);
-                    } else if (passwordController.text.length < 6) {
+                    } else if (__passwordController.text.length < 6) {
                       Utils.snackBar("Please Enter 6 digit password", context);
                     } else {
+                      Map data = {
+                        "email": _emailController.text.toString(),
+                        "password": __passwordController.text.toString()
+                      };
+
+                      authviewModel.loginApi(data, context);
                       print("Api hit");
                     }
                   },

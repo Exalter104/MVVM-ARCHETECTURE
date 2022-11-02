@@ -18,17 +18,21 @@ class Roundbutton extends StatelessWidget {
       child: InkWell(
           onTap: onPress,
           child: Container(
-            height: 50,
+            height: 55,
             width: 300,
             decoration: BoxDecoration(
               color: AppColor.buttonColor,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Center(
-              child: Text(
-                title,
-                style: TextStyle(color: AppColor.whiteColor),
-              ),
+              child: loading
+                  ? CircularProgressIndicator(
+                      color: Colors.white,
+                    )
+                  : Text(
+                      title,
+                      style: TextStyle(color: AppColor.whiteColor),
+                    ),
             ),
           )),
     );

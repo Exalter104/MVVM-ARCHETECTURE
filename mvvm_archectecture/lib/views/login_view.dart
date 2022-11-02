@@ -18,19 +18,32 @@ class _LoginScreenState extends State<LoginScreen> {
   FocusNode emailFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
   ValueNotifier<bool> obsecurePassword = ValueNotifier<bool>(true);
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    emailController.dispose();
+    passwordController.dispose();
+
+    emailFocusNode.dispose();
+    passwordFocusNode.dispose();
+    obsecurePassword.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height * 1;
     return Scaffold(
         appBar: AppBar(
-          title: Text("HomeScreen"),
+          backgroundColor: Colors.red,
+          title: Center(child: Text("HomeScreen")),
         ),
         body: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset("images/dream.jpg"),
               Text(
                 "Exarth",
                 style: TextStyle(fontSize: 35, color: AppColor.buttonColor),
@@ -88,7 +101,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 child: Roundbutton(
                   title: "Login",
-                  onPress: () {},
+                  onPress: () {
+                    if (emailController.text.isEmpty) {
+                      Utils.snackBar("Please Enter email", context);
+                    } else if (passwordController.text.isEmpty) {
+                      Utils.snackBar("Please Enter password", context);
+                    } else if (passwordController.text.length < 6) {
+                      Utils.snackBar("Please Enter 6 digit password", context);
+                    } else {
+                      print("Api hit");
+                    }
+                  },
                 ),
               )
             ],
